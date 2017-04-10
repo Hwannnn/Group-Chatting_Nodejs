@@ -1,6 +1,6 @@
 # GroupChatting_Nodejs
 
-around 2016-5
+2016 / first semester / self practice
 
 Group chatting. using Nodejs
 
