@@ -1,0 +1,40 @@
+extends layout
+ 
+block content
+    div#d1
+      ul#messages
+      form(action='')
+        input#m(autocomplete='off')
+        button Send
+     
+    style.
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { padding:0px; font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #d1 { padding : 1em 0 3.5em 0; overflow : auto; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+ 
+       
+    script(src='https://cdn.socket.io/socket.io-1.3.7.js')
+    script(src='http://code.jquery.com/jquery-1.11.1.js')
+    script.
+      var socket = io();
+      socket.on('connect', function(){
+        socket.emit('join');
+      });
+      socket.on('first', function(region){
+        $('#messages').append("<li class='chatmsg' style='text-align:center'><b>\"" + region + "</b>\" 채팅방에 오신 것을 환영합니다.</li>");
+      });
+      $('form').submit(function(){
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('').focus();
+        return false;
+      });   
+      socket.on('chat message', function(user, msg){
+        $('#messages').append("<li class = 'chatmsg'>"+user+" : "+msg+"</li>");
+        $('.chatmsg').get(-1).scrollIntoView(true);
+      });
